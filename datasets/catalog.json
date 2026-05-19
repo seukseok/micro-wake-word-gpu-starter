@@ -1,0 +1,114 @@
+{
+  "last_reviewed": "2026-05-19",
+  "selection_notes": [
+    "Audio files are not vendored in this repository.",
+    "Use this catalog to pick public datasets, understand licensing, and stage local training data.",
+    "For a first microWakeWord run, prefer the upstream kahrendt/microwakeword features plus a small amount of local positive wake phrase audio."
+  ],
+  "datasets": [
+    {
+      "id": "kahrendt_microwakeword_features",
+      "name": "microWakeWord precomputed feature dataset",
+      "provider": "Kevin Ahrendt / Hugging Face",
+      "url": "https://huggingface.co/datasets/kahrendt/microwakeword",
+      "role": ["microWakeWord-native background and negative features"],
+      "recommended_for": ["first real training run", "ambient false-accept reduction"],
+      "license": "Mixed upstream sources; verify the dataset card and source licenses before redistribution.",
+      "redistribution": "Do not copy feature archives into this repo.",
+      "format": "mmap ninja spectrogram feature zip files",
+      "size": "about 10 GB on Hugging Face",
+      "last_modified": "2024-11-22",
+      "notes": [
+        "This is the most directly useful public asset for this starter because it is already shaped for microWakeWord training.",
+        "Dataset Viewer does not expose row splits because the files are feature archives rather than parquet/audio rows."
+      ]
+    },
+    {
+      "id": "google_speech_commands_v0_02",
+      "name": "Google Speech Commands v0.02",
+      "provider": "Google",
+      "url": "https://huggingface.co/datasets/google/speech_commands",
+      "source_url": "http://download.tensorflow.org/data/speech_commands_v0.02.tar.gz",
+      "paper": "https://arxiv.org/abs/1804.03209",
+      "role": ["keyword spotting baseline", "single-word auxiliary positives", "single-word negatives"],
+      "recommended_for": ["sanity checks", "keyword spotting examples", "auxiliary negative speech"],
+      "license": "CC-BY-4.0",
+      "redistribution": "Small attributed excerpts may be redistributed under CC-BY-4.0, but this repo keeps audio downloads local by default.",
+      "format": "1 second WAV clips",
+      "size": "v0.02 download about 2.29 GB; dataset about 3.16 GB",
+      "last_modified": "2024-01-18 on Hugging Face",
+      "notes": [
+        "Includes command words, auxiliary words, and a _silence_ class.",
+        "Useful for tests, not a replacement for phrase-specific wake word positives."
+      ]
+    },
+    {
+      "id": "mlcommons_multilingual_spoken_words_microset",
+      "name": "MLCommons Multilingual Spoken Words Corpus microset",
+      "provider": "MLCommons",
+      "url": "https://mlcommons.org/datasets/multilingual-spoken-words/",
+      "huggingface_url": "https://huggingface.co/datasets/MLCommons/ml_spoken_words",
+      "role": ["multilingual keyword spotting", "spoken-word negatives", "non-English keyword experiments"],
+      "recommended_for": ["prototype keyword data", "Spanish or English word-level experiments"],
+      "license": "CC-BY-4.0",
+      "redistribution": "Follow MLCommons mirror terms; do not attempt to identify speakers.",
+      "format": "Opus clips plus metadata",
+      "size": "microset about 584 MB; full dataset about 124 GB",
+      "last_reviewed": "2026-05-19",
+      "notes": [
+        "The full MSWC corpus has more than 23 million one-second spoken examples in 50 languages.",
+        "The microset is the practical choice for a small repo workflow."
+      ]
+    },
+    {
+      "id": "mozilla_common_voice_25",
+      "name": "Mozilla Common Voice Scripted Speech 25.0",
+      "provider": "Mozilla Data Collective",
+      "url": "https://datacollective.mozillafoundation.org/datasets?q=common%20voice",
+      "role": ["diverse read speech", "language and accent coverage", "negative speech"],
+      "recommended_for": ["language diversity", "non-wake speech negatives"],
+      "license": "CC0-1.0 for standard Common Voice scripted datasets; verify each language datasheet.",
+      "redistribution": "Do not re-host or re-share Common Voice audio; download from Mozilla Data Collective.",
+      "format": "MP3 clips plus TSV metadata",
+      "release": "cv-corpus-25.0-2026-03-09",
+      "notes": [
+        "Useful as negative speech, not as direct positive wake phrase data.",
+        "Mozilla Data Collective terms forbid trying to identify speakers."
+      ]
+    },
+    {
+      "id": "fsd50k",
+      "name": "FSD50K",
+      "provider": "Freesound Dataset / Zenodo",
+      "url": "https://zenodo.org/records/4060432",
+      "explore_url": "https://annotator.freesound.org/fsd/release/FSD50K/",
+      "huggingface_url": "https://huggingface.co/datasets/Fhrozen/FSD50k",
+      "role": ["environmental hard negatives", "noise augmentation", "non-speech sound events"],
+      "recommended_for": ["false wake reduction", "background sound robustness"],
+      "license": "CC-BY-4.0 dataset-level; check bundled LICENSE-DATASET and clip attribution.",
+      "redistribution": "Keep attribution and license files with downloaded audio.",
+      "format": "WAV audio clips with ontology labels",
+      "size": "51,197 clips; over 100 hours",
+      "notes": [
+        "Good source for household, music, animal, and environmental sounds.",
+        "Filter out classes that sound too close to the target wake phrase unless using them as hard negatives intentionally."
+      ]
+    },
+    {
+      "id": "microsoft_dns_challenge_5",
+      "name": "Microsoft DNS Challenge 5",
+      "provider": "Microsoft",
+      "url": "https://github.com/microsoft/DNS-Challenge",
+      "role": ["noise", "room impulse responses", "speech enhancement stress tests"],
+      "recommended_for": ["advanced noise/RIR augmentation", "speakerphone stress tests"],
+      "license": "Mixed dataset licenses plus MIT/CC-BY-4.0 project materials; inspect each source list.",
+      "redistribution": "Do not vendor downloaded DNS audio in this repo.",
+      "format": "clean speech, noise, and impulse-response archives",
+      "size": "about 550 GB archived and about 1 TB unpacked for DNS5 full data",
+      "notes": [
+        "Too large for the default starter workflow.",
+        "Use selected noise or RIR subsets only after checking source licenses."
+      ]
+    }
+  ]
+}

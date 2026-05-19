@@ -30,6 +30,7 @@ workspace/**/*.tflite
 
 # Local audio datasets
 data/dataset_manifest.json
+data/dataset_plan.json
 data/**/*.wav
 data/**/*.mp3
 data/**/*.flac

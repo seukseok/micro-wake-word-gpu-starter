@@ -4,6 +4,8 @@ from pathlib import Path
 
 from scripts.export_esphome import build_snippet
 from scripts.prepare_dataset import summarize
+from scripts.show_datasets import load_catalog, select_datasets
+from scripts.stage_dataset_dirs import FOLDERS
 from scripts.validate_manifest import validate_manifest
 
 
@@ -47,6 +49,21 @@ class DatasetTests(unittest.TestCase):
             folder.mkdir()
             summary = summarize("positive", folder)
         self.assertNotIn("\\", summary["folder"])
+
+    def test_dataset_catalog_has_first_run_sources(self):
+        catalog = load_catalog()
+        selected = select_datasets(catalog, "first")
+        ids = {item["id"] for item in selected}
+        self.assertIn("kahrendt_microwakeword_features", ids)
+        self.assertIn("google_speech_commands_v0_02", ids)
+        self.assertIn("fsd50k", ids)
+        self.assertGreaterEqual(len(selected), 4)
+
+    def test_staging_folders_are_declared(self):
+        suffixes = {folder.as_posix().split("data/")[-1] for folder in FOLDERS}
+        self.assertIn("positive", suffixes)
+        self.assertIn("negative/speech_commands", suffixes)
+        self.assertIn("negative/fsd50k", suffixes)
 
 
 if __name__ == "__main__":

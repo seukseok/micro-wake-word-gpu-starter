@@ -18,5 +18,9 @@ jobs:
         run: python scripts/export_esphome.py models/example_wake_word.json --output /tmp/example.yaml
       - name: Validate empty dataset folders
         run: python scripts/prepare_dataset.py data/positive data/negative --manifest /tmp/dataset_manifest.json --allow-empty
+      - name: Inspect dataset catalog
+        run: python scripts/show_datasets.py --recommended first --write-plan /tmp/dataset_plan.json
+      - name: Check data staging folders
+        run: python scripts/stage_dataset_dirs.py
       - name: Run unit tests
         run: python -m unittest discover -s tests

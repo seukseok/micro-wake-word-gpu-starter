@@ -88,6 +88,31 @@ Verified:
 
 See [examples/rtx-5070-ti-smoke-test.md](examples/rtx-5070-ti-smoke-test.md) for the actual command outputs.
 
+## Public Datasets
+
+The dataset catalog is in [datasets/catalog.json](datasets/catalog.json), with notes in [datasets/README.md](datasets/README.md).
+
+Recommended first-run sources:
+
+- `kahrendt/microwakeword`: microWakeWord-native feature archives for background and negative data
+- Google Speech Commands v0.02: CC-BY-4.0 one-word keyword spotting clips
+- MLCommons Multilingual Spoken Words microset: CC-BY-4.0 multilingual spoken-word clips
+- FSD50K: CC-BY-4.0 environmental sounds for hard negatives
+
+Common Voice 25.0 is included as a cataloged source for diverse speech, but the repo does not re-host Common Voice audio because Mozilla Data Collective terms require downloading from the original source.
+
+Inspect the catalog:
+
+```bash
+python scripts/show_datasets.py --recommended first
+```
+
+Create local staging folders for public samples:
+
+```bash
+python scripts/stage_dataset_dirs.py
+```
+
 ## Folder Layout
 
 ```text
@@ -97,6 +122,9 @@ configs/
 data/
   positive/
   negative/
+datasets/
+  catalog.json
+  sample_manifest.example.json
 docs/
   dataset-guide.md
   release-playbook.md
@@ -110,6 +138,8 @@ scripts/
   export_esphome.py
   prepare_dataset.py
   run_trainer.ps1
+  show_datasets.py
+  stage_dataset_dirs.py
   smoke_test.ps1
   validate_manifest.py
 workspace/

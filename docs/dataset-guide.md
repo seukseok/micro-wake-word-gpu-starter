@@ -2,6 +2,14 @@
 
 You can train with generated samples only, but real samples help a lot once you have hardware testers.
 
+For public dataset sources, see [../datasets/catalog.json](../datasets/catalog.json). The catalog was last reviewed on 2026-05-19 and includes microWakeWord-native features, keyword spotting datasets, diverse speech corpora, and environmental sound datasets.
+
+Inspect the recommended first-run dataset stack:
+
+```bash
+python scripts/show_datasets.py --recommended first
+```
+
 ## Positive samples
 
 Positive samples contain the wake phrase.

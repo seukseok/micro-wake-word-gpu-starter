@@ -1,0 +1,38 @@
+{
+  "purpose": "Example local staging manifest for public datasets. It references sources and target folders but does not vendor audio.",
+  "last_reviewed": "2026-05-19",
+  "samples": [
+    {
+      "dataset_id": "google_speech_commands_v0_02",
+      "source": "http://download.tensorflow.org/data/speech_commands_v0.02.tar.gz",
+      "license": "CC-BY-4.0",
+      "role": "single-word negative speech and keyword sanity checks",
+      "suggested_labels": ["stop", "go", "yes", "no", "up", "down", "marvin", "sheila"],
+      "local_target": "data/negative/speech_commands/"
+    },
+    {
+      "dataset_id": "mlcommons_multilingual_spoken_words_microset",
+      "source": "https://mlcommons.org/datasets/multilingual-spoken-words/",
+      "license": "CC-BY-4.0",
+      "role": "multilingual one-word keyword examples",
+      "suggested_subset": "Microset",
+      "local_target": "data/negative/mswc/"
+    },
+    {
+      "dataset_id": "fsd50k",
+      "source": "https://zenodo.org/records/4060432",
+      "license": "CC-BY-4.0 dataset-level; preserve clip attribution files",
+      "role": "environmental hard negatives",
+      "suggested_classes": ["Speech", "Music", "Domestic sounds", "Tools", "Vehicle", "Animal"],
+      "local_target": "data/negative/fsd50k/"
+    },
+    {
+      "dataset_id": "local_positive_wake_phrase",
+      "source": "recorded by project owner or hardware testers",
+      "license": "project-owner controlled",
+      "role": "positive wake phrase examples",
+      "format": "16 kHz mono 16-bit PCM WAV",
+      "local_target": "data/positive/"
+    }
+  ]
+}
