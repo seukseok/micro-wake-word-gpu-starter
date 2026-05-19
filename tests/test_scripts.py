@@ -3,6 +3,7 @@ import unittest
 from pathlib import Path
 
 from scripts.export_esphome import build_snippet
+from scripts.prepare_dataset import summarize
 from scripts.validate_manifest import validate_manifest
 
 
@@ -37,6 +38,15 @@ class ExportTests(unittest.TestCase):
             "github://owner/repo/models/hey_komi.json",
         )
         self.assertIn("github://owner/repo/models/hey_komi.json", snippet)
+
+
+class DatasetTests(unittest.TestCase):
+    def test_manifest_folder_paths_use_forward_slashes(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            folder = Path(tmp) / "positive"
+            folder.mkdir()
+            summary = summarize("positive", folder)
+        self.assertNotIn("\\", summary["folder"])
 
 
 if __name__ == "__main__":

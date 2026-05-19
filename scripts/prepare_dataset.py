@@ -15,6 +15,10 @@ from typing import Iterable
 AUDIO_EXTENSIONS = {".wav", ".mp3", ".flac", ".ogg", ".m4a", ".aac", ".opus", ".webm"}
 
 
+def display_path(path: Path) -> str:
+    return path.as_posix()
+
+
 @dataclass
 class AudioIssue:
     path: str
@@ -43,7 +47,7 @@ def iter_audio_files(path: Path) -> Iterable[Path]:
 
 def inspect_wav(path: Path) -> tuple[WavInfo | None, AudioIssue | None]:
     if path.suffix.lower() != ".wav":
-        return None, AudioIssue(str(path), "not a WAV file; convert with ffmpeg first")
+        return None, AudioIssue(display_path(path), "not a WAV file; convert with ffmpeg first")
 
     try:
         with wave.open(str(path), "rb") as wav:
@@ -52,11 +56,11 @@ def inspect_wav(path: Path) -> tuple[WavInfo | None, AudioIssue | None]:
             channels = wav.getnchannels()
             sample_width = wav.getsampwidth()
     except wave.Error as exc:
-        return None, AudioIssue(str(path), f"invalid WAV: {exc}")
+        return None, AudioIssue(display_path(path), f"invalid WAV: {exc}")
 
     duration = frames / sample_rate if sample_rate else 0.0
     info = WavInfo(
-        path=str(path),
+        path=display_path(path),
         frames=frames,
         sample_rate=sample_rate,
         channels=channels,
@@ -93,7 +97,7 @@ def summarize(label: str, folder: Path) -> dict:
 
     return {
         "label": label,
-        "folder": str(folder),
+        "folder": display_path(folder),
         "audio_files": len(files),
         "valid_wavs": sum(1 for item in wavs if item.sample_rate == 16000 and item.channels == 1 and item.sample_width_bytes == 2),
         "duration_seconds": round(sum(item.duration_seconds for item in wavs), 3),

@@ -68,6 +68,26 @@ Check local WAV samples before training:
 python scripts/prepare_dataset.py data/positive data/negative --manifest data/dataset_manifest.json
 ```
 
+Run the full local smoke test on Windows/PowerShell:
+
+```powershell
+.\scripts\smoke_test.ps1
+```
+
+## Tested Hardware
+
+This repo was smoke-tested on an NVIDIA GeForce RTX 5070 Ti with Docker Desktop on Windows 11.
+
+Verified:
+
+- Docker GPU passthrough with `nvidia/cuda:12.4.1-base-ubuntu22.04`
+- trainer container starts from `docker compose up -d`
+- trainer UI returns `HTTP 200` on `http://localhost:8789`
+- Torch inside the trainer reports `cuda_available: true`
+- warm restart reaches `HTTP 200` in 5.3 seconds after the first dependency install
+
+See [examples/rtx-5070-ti-smoke-test.md](examples/rtx-5070-ti-smoke-test.md) for the actual command outputs.
+
 ## Folder Layout
 
 ```text
@@ -81,12 +101,16 @@ docs/
   dataset-guide.md
   release-playbook.md
   windows-wsl2-rtx.md
+examples/
+  rtx-5070-ti-smoke-test.md
+  hey-komi/
 models/
   example_wake_word.json
 scripts/
   export_esphome.py
   prepare_dataset.py
   run_trainer.ps1
+  smoke_test.ps1
   validate_manifest.py
 workspace/
   personal_samples/

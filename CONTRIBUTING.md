@@ -34,4 +34,10 @@ python scripts/prepare_dataset.py data/positive data/negative --manifest data/da
 python -m unittest discover -s tests
 ```
 
+On Windows with an NVIDIA GPU, run the end-to-end smoke test:
+
+```powershell
+.\scripts\smoke_test.ps1
+```
+
 Keep scripts dependency-free unless a dependency removes a lot of real complexity.

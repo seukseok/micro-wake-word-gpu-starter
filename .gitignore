@@ -9,6 +9,8 @@ venv/
 
 # Trainer runtime data
 workspace/.venv/
+workspace/.recorder-venv/
+workspace/.esphome/
 workspace/cache/
 workspace/downloads/
 workspace/output/

@@ -1,0 +1,20 @@
+{
+  "positive": {
+    "label": "positive",
+    "folder": "data/positive",
+    "audio_files": 0,
+    "valid_wavs": 0,
+    "duration_seconds": 0,
+    "files": [],
+    "issues": []
+  },
+  "negative": {
+    "label": "negative",
+    "folder": "data/negative",
+    "audio_files": 0,
+    "valid_wavs": 0,
+    "duration_seconds": 0,
+    "files": [],
+    "issues": []
+  }
+}

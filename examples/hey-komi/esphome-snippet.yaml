@@ -1,0 +1,4 @@
+micro_wake_word:
+  models:
+    - model: /config/esphome/models/example_wake_word.json
+      id: hey_komi_wake_word

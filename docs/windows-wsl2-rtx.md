@@ -54,3 +54,26 @@ Use the latest NVIDIA driver and Docker Desktop release. If TensorFlow inside an
 - `docker --version`
 - `docker compose version`
 - the output of the CUDA `nvidia-smi` test above
+
+## Verified smoke test
+
+This starter was smoke-tested on:
+
+```text
+NVIDIA GeForce RTX 5070 Ti, driver 591.86, 16303 MiB
+Docker version 29.0.1
+Docker Compose v2.40.3-desktop.1
+```
+
+The trainer UI returned `HTTP 200` on `http://localhost:8789`, and Torch inside the container reported:
+
+```json
+{
+  "torch": "2.12.0+cu130",
+  "cuda_available": true,
+  "cuda_device_count": 1,
+  "cuda_device_name": "NVIDIA GeForce RTX 5070 Ti"
+}
+```
+
+The first boot may take 15-20 minutes while the trainer creates `/data/.recorder-venv` and installs dependencies. After that, a warm restart reached `HTTP 200` in 5.3 seconds on the test machine.
