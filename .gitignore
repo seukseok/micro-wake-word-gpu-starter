@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.venv/
+venv/
+
+# Trainer runtime data
+workspace/.venv/
+workspace/cache/
+workspace/downloads/
+workspace/output/
+workspace/work/
+workspace/*.log
+workspace/**/*.json
+workspace/**/*.yaml
+workspace/**/*.yml
+workspace/**/*.wav
+workspace/**/*.mp3
+workspace/**/*.flac
+workspace/**/*.ogg
+workspace/**/*.m4a
+workspace/**/*.opus
+workspace/**/*.webm
+workspace/**/*.tflite
+
+# Local audio datasets
+data/dataset_manifest.json
+data/**/*.wav
+data/**/*.mp3
+data/**/*.flac
+data/**/*.ogg
+data/**/*.m4a
+data/**/*.opus
+data/**/*.webm
+!data/positive/.gitkeep
+!data/negative/.gitkeep
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

@@ -1,0 +1,14 @@
+services:
+  trainer:
+    image: ghcr.io/tatertotterson/microwakeword:latest
+    container_name: micro-wake-word-gpu-starter
+    restart: unless-stopped
+    ports:
+      - "${REC_PORT:-8789}:${REC_PORT:-8789}"
+    environment:
+      REC_PORT: "${REC_PORT:-8789}"
+      NVIDIA_VISIBLE_DEVICES: "${NVIDIA_VISIBLE_DEVICES:-all}"
+      NVIDIA_DRIVER_CAPABILITIES: "${NVIDIA_DRIVER_CAPABILITIES:-compute,utility}"
+    volumes:
+      - ./workspace:/data
+    gpus: all

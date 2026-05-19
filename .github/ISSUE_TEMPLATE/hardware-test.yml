@@ -1,0 +1,42 @@
+name: Hardware test report
+description: Share results from an ESPHome micro wake word device test.
+title: "[hardware-test]: "
+labels: ["hardware-test"]
+body:
+  - type: input
+    id: board
+    attributes:
+      label: Board
+      placeholder: ESP32-S3-BOX-3, M5Stack Atom Echo, XIAO ESP32S3, custom ESP32-S3
+    validations:
+      required: true
+  - type: input
+    id: microphone
+    attributes:
+      label: Microphone
+      placeholder: INMP441, built-in mic, ReSpeaker, other
+    validations:
+      required: true
+  - type: input
+    id: wake_phrase
+    attributes:
+      label: Wake phrase
+      placeholder: hey komi
+    validations:
+      required: true
+  - type: textarea
+    id: manifest
+    attributes:
+      label: Manifest micro settings
+      description: Paste probability_cutoff, sliding_window_size, tensor_arena_size, and ESPHome version.
+      render: json
+    validations:
+      required: false
+  - type: textarea
+    id: results
+    attributes:
+      label: Results
+      description: Include false wakes per hour, missed wakes, room noise, distance from mic, and anything surprising.
+      placeholder: "20/20 detected at 1m, 1 false wake in 2 hours of TV audio..."
+    validations:
+      required: true

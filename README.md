@@ -1,0 +1,155 @@
+# micro-wake-word-gpu-starter
+
+Train and package custom ESPHome micro wake word models with an NVIDIA GPU.
+
+This starter is for Home Assistant and ESPHome users who want to build a local wake word model without turning the training setup into a weekend archaeology project. It gives you a Windows/WSL2 friendly Docker Compose setup, dataset checks, manifest validation, and ESPHome snippets for the files produced by the upstream microWakeWord training stack.
+
+> Hardware note: you can prepare data, run GPU training, validate manifests, and generate ESPHome config without an ESP32-S3 device. Real false-positive tuning still needs device testing before you ship a model to other people.
+
+## Why this exists
+
+The useful pieces are already out there:
+
+- [OHF-Voice/micro-wake-word](https://github.com/OHF-Voice/micro-wake-word) trains TensorFlow Lite Micro wake word models.
+- [esphome/micro-wake-word-models](https://github.com/esphome/micro-wake-word-models) hosts ready-to-use model manifests.
+- [TaterTotterson/microWakeWord-Trainer-Nvidia-Docker](https://github.com/TaterTotterson/microWakeWord-Trainer-Nvidia-Docker) wraps training in a CUDA Docker app.
+
+This repo focuses on the missing "starter kit" layer: predictable folders, GPU launch commands, dataset validation, manifest checks, and copy-paste ESPHome output.
+
+## Quick Start
+
+Requirements:
+
+- Windows 11 or Linux
+- NVIDIA GPU with current drivers
+- Docker Desktop with WSL2 integration, or Docker Engine on Linux
+- Optional: `nvidia-smi` on the host for a quick GPU sanity check
+
+Start the trainer UI:
+
+```bash
+docker compose up
+```
+
+Open:
+
+```text
+http://localhost:8789
+```
+
+The trainer stores generated samples, downloaded datasets, and trained model files under:
+
+```text
+workspace/
+```
+
+Expected final artifacts:
+
+```text
+workspace/trained_wake_words/<wake_word>.tflite
+workspace/trained_wake_words/<wake_word>.json
+```
+
+Validate a trained model manifest:
+
+```bash
+python scripts/validate_manifest.py workspace/trained_wake_words/hey_komi.json
+```
+
+Generate an ESPHome snippet:
+
+```bash
+python scripts/export_esphome.py workspace/trained_wake_words/hey_komi.json
+```
+
+Check local WAV samples before training:
+
+```bash
+python scripts/prepare_dataset.py data/positive data/negative --manifest data/dataset_manifest.json
+```
+
+## Folder Layout
+
+```text
+configs/
+  trainer.env.example
+  wake-word.example.json
+data/
+  positive/
+  negative/
+docs/
+  dataset-guide.md
+  release-playbook.md
+  windows-wsl2-rtx.md
+models/
+  example_wake_word.json
+scripts/
+  export_esphome.py
+  prepare_dataset.py
+  run_trainer.ps1
+  validate_manifest.py
+workspace/
+  personal_samples/
+  negative_samples/
+  trained_wake_words/
+```
+
+## Suggested Workflow
+
+1. Pick a phrase that is short, uncommon, and easy to pronounce.
+2. Put optional real positive samples in `data/positive/`.
+3. Put hard negatives or false wake clips in `data/negative/`.
+4. Run `prepare_dataset.py` to catch bad audio before training.
+5. Start the trainer with `docker compose up`.
+6. Train from the web UI.
+7. Validate the generated JSON manifest with `validate_manifest.py`.
+8. Generate the ESPHome YAML snippet with `export_esphome.py`.
+9. Ask hardware testers to report false wakes, misses, board, mic, and threshold settings.
+
+## Sample ESPHome Output
+
+For a manifest named `hey_komi.json`, the export script prints something like:
+
+```yaml
+micro_wake_word:
+  models:
+    - model: /config/esphome/models/hey_komi.json
+```
+
+Copy the generated manifest and `.tflite` file into the same ESPHome-accessible folder.
+
+## Wake Phrase Tips
+
+Good phrases are:
+
+- 2 to 4 syllables
+- not common in normal conversation
+- easy to say consistently
+- not too close to "okay nabu", "alexa", "hey jarvis", or other enabled wake words
+
+Examples to try:
+
+- `hey komi`
+- `okay local`
+- `nabu start`
+- Korean phrase experiment: `ha-i komi`
+
+## What is intentionally not here
+
+- No bundled model weights.
+- No promise that a model is production-ready before hardware testing.
+- No forked copy of upstream training code.
+
+This repo should stay small, useful, and boring in the best way: the trainer can evolve upstream while this starter keeps the user journey clean.
+
+## GitHub Topics
+
+Recommended topics:
+
+```text
+home-assistant, esphome, esp32-s3, tinyml, edge-ai, wake-word, tensorflow-lite-micro, nvidia-gpu, cuda, docker
+```
+
+## License
+
+MIT. Upstream projects keep their own licenses.

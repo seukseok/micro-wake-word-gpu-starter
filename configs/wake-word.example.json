@@ -1,0 +1,11 @@
+{
+  "wake_phrase": "hey komi",
+  "display_name": "Hey Komi",
+  "language": "en",
+  "notes": "Short, uncommon, and easy to pronounce consistently.",
+  "target_runtime": "ESPHome micro_wake_word",
+  "expected_outputs": [
+    "workspace/trained_wake_words/hey_komi.tflite",
+    "workspace/trained_wake_words/hey_komi.json"
+  ]
+}
