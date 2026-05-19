@@ -2,6 +2,10 @@
 
 Train and package custom ESPHome micro wake word models with an NVIDIA GPU.
 
+![Actual trainer UI demo](docs/assets/trainer-ui-demo.gif)
+
+Actual capture from the running trainer UI at `http://localhost:8789`. For a normal video file, use the [raw MP4 recording](https://raw.githubusercontent.com/seukseok/micro-wake-word-gpu-starter/main/docs/assets/trainer-ui-demo.mp4) instead of opening the repository file view.
+
 This starter is for Home Assistant and ESPHome users who want to build a local wake word model without turning the training setup into a weekend archaeology project. It gives you a Windows/WSL2 friendly Docker Compose setup, dataset checks, manifest validation, and ESPHome snippets for the files produced by the upstream microWakeWord training stack.
 
 > Hardware note: you can prepare data, run GPU training, validate manifests, and generate ESPHome config without an ESP32-S3 device. Real false-positive tuning still needs device testing before you ship a model to other people.
@@ -132,6 +136,10 @@ docs/
 examples/
   rtx-5070-ti-smoke-test.md
   hey-komi/
+docs/assets/
+  trainer-ui-demo.gif
+  trainer-ui-demo.mp4
+  trainer-ui-trainer.png
 models/
   example_wake_word.json
 scripts/

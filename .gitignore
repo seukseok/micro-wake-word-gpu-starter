@@ -6,6 +6,7 @@ __pycache__/
 .mypy_cache/
 .venv/
 venv/
+.tools/
 
 # Trainer runtime data
 workspace/.venv/
