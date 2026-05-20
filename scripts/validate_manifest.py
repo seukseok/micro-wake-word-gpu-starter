@@ -61,8 +61,8 @@ def validate_manifest(path: Path, allow_missing_model: bool = False) -> list[str
                 errors.append(f"micro.{key} must be {expected_type}")
 
         cutoff = micro.get("probability_cutoff")
-        if isinstance(cutoff, (int, float)) and not 0 < float(cutoff) < 1:
-            errors.append("micro.probability_cutoff must be between 0 and 1")
+        if isinstance(cutoff, (int, float)) and not 0 <= float(cutoff) <= 1:
+            errors.append("micro.probability_cutoff must be between 0 and 1 inclusive")
 
     model_name = data.get("model")
     if isinstance(model_name, str):

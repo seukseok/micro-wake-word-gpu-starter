@@ -10,6 +10,10 @@ This starter is for Home Assistant and ESPHome users who want to build a local w
 
 > Hardware note: you can prepare data, run GPU training, validate manifests, and generate ESPHome config without an ESP32-S3 device. Real false-positive tuning still needs device testing before you ship a model to other people.
 
+## What this program is
+
+This is a GPU training starter kit for ESPHome micro wake word models. It is not a new model architecture and it does not replace the upstream trainer. The value is the glue around the trainer: a reproducible Docker launch, GPU checks, dataset notes, smoke-training scripts, manifest validation, ESPHome export, and a real UI/video demo so people can tell what they are getting before they clone it.
+
 ## Why this exists
 
 The useful pieces are already out there:
@@ -78,6 +82,18 @@ Run the full local smoke test on Windows/PowerShell:
 .\scripts\smoke_test.ps1
 ```
 
+Check the training GPU stack after `/data/.venv` exists:
+
+```powershell
+.\scripts\check_trainer_gpu.ps1
+```
+
+Run a small end-to-end training smoke test after the trainer datasets are prepared:
+
+```powershell
+.\scripts\train_smoke.ps1 -WakeWord "hey komi" -WakeWordTitle "Hey Komi" -Samples 50 -BatchSize 10 -TrainingSteps 20
+```
+
 ## Tested Hardware
 
 This repo was smoke-tested on an NVIDIA GeForce RTX 5070 Ti with Docker Desktop on Windows 11.
@@ -89,8 +105,26 @@ Verified:
 - trainer UI returns `HTTP 200` on `http://localhost:8789`
 - Torch inside the trainer reports `cuda_available: true`
 - warm restart reaches `HTTP 200` in 5.3 seconds after the first dependency install
+- TensorFlow training sees `/physical_device:GPU:0` when the helper scripts set the venv NVIDIA library path
 
 See [examples/rtx-5070-ti-smoke-test.md](examples/rtx-5070-ti-smoke-test.md) for the actual command outputs.
+
+## Actual GPU Training Run
+
+A real `hey komi` training smoke run was completed on the RTX 5070 Ti:
+
+```text
+Samples: 50 generated TTS wake-word clips
+Training steps: 20
+Trainer result: Training complete (GPU path)
+Elapsed time: 0:04:53
+Model artifact: workspace/output/2026-05-20-10-23-33-hey_komi-50-20/hey_komi.tflite
+Manifest artifact: workspace/output/2026-05-20-10-23-33-hey_komi-50-20/hey_komi.json
+```
+
+The run used real public data for the path check: `kahrendt/microwakeword` negative archives, MIT RIR, and an AudioSet subset converted to 16 kHz WAV. The generated model validated and exported to ESPHome YAML, but it is not a useful production model: the tiny smoke run calibrated to `probability_cutoff=1.00` with `0.00%` recall on its tiny validation split.
+
+See [examples/hey-komi-gpu-smoke-training.md](examples/hey-komi-gpu-smoke-training.md) for the exact results and limitations.
 
 ## Public Datasets
 
@@ -117,6 +151,8 @@ Create local staging folders for public samples:
 python scripts/stage_dataset_dirs.py
 ```
 
+For the upstream trainer's full augmentation path, expect tens of GB of local data under `workspace/training_datasets/`. The smoke run produced about 25 GB of negative archives plus extracted AudioSet/MIT RIR data before training.
+
 ## Folder Layout
 
 ```text
@@ -134,6 +170,7 @@ docs/
   release-playbook.md
   windows-wsl2-rtx.md
 examples/
+  hey-komi-gpu-smoke-training.md
   rtx-5070-ti-smoke-test.md
   hey-komi/
 docs/assets/
@@ -143,12 +180,14 @@ docs/assets/
 models/
   example_wake_word.json
 scripts/
+  check_trainer_gpu.ps1
   export_esphome.py
   prepare_dataset.py
   run_trainer.ps1
   show_datasets.py
   stage_dataset_dirs.py
   smoke_test.ps1
+  train_smoke.ps1
   validate_manifest.py
 workspace/
   personal_samples/
@@ -163,10 +202,12 @@ workspace/
 3. Put hard negatives or false wake clips in `data/negative/`.
 4. Run `prepare_dataset.py` to catch bad audio before training.
 5. Start the trainer with `docker compose up`.
-6. Train from the web UI.
-7. Validate the generated JSON manifest with `validate_manifest.py`.
-8. Generate the ESPHome YAML snippet with `export_esphome.py`.
-9. Ask hardware testers to report false wakes, misses, board, mic, and threshold settings.
+6. Prepare the upstream training datasets, or use a clearly marked smoke subset for path testing.
+7. Run `check_trainer_gpu.ps1` and confirm Torch/TensorFlow see the NVIDIA GPU.
+8. Train from the web UI or with `train_smoke.ps1`.
+9. Validate the generated JSON manifest with `validate_manifest.py`.
+10. Generate the ESPHome YAML snippet with `export_esphome.py`.
+11. Ask hardware testers to report false wakes, misses, board, mic, and threshold settings.
 
 ## Sample ESPHome Output
 
@@ -199,7 +240,8 @@ Examples to try:
 ## What is intentionally not here
 
 - No bundled model weights.
-- No promise that a model is production-ready before hardware testing.
+- No claim that the included smoke-training result is production-ready.
+- No promise that any model is production-ready before hardware testing.
 - No forked copy of upstream training code.
 
 This repo should stay small, useful, and boring in the best way: the trainer can evolve upstream while this starter keeps the user journey clean.

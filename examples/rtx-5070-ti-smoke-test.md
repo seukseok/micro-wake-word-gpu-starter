@@ -128,3 +128,5 @@ OK
 - Hardware wake/miss measurements
 
 Those need real samples and device testers.
+
+For the later end-to-end GPU training smoke run, see [hey-komi-gpu-smoke-training.md](hey-komi-gpu-smoke-training.md).

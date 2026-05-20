@@ -1,5 +1,6 @@
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 from scripts.export_esphome import build_snippet
@@ -26,6 +27,23 @@ class ManifestValidationTests(unittest.TestCase):
             "model file does not exist next to manifest: example_wake_word.tflite",
             errors,
         )
+
+    def test_probability_cutoff_allows_calibrated_one(self):
+        data = {
+            "type": "micro",
+            "wake_word": "Hey Komi",
+            "model": "hey_komi.tflite",
+            "trained_languages": ["en"],
+            "version": 2,
+            "micro": {
+                "probability_cutoff": 1.0,
+                "feature_step_size": 10,
+                "sliding_window_size": 5,
+                "tensor_arena_size": 30000,
+            },
+        }
+        with patch("scripts.validate_manifest.load_json", return_value=data):
+            self.assertEqual(validate_manifest(Path("hey_komi.json"), True), [])
 
 
 class ExportTests(unittest.TestCase):

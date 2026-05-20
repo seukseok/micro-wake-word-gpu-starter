@@ -9,14 +9,19 @@ venv/
 .tools/
 
 # Trainer runtime data
+workspace/.cache/
 workspace/.venv/
 workspace/.recorder-venv/
 workspace/.esphome/
 workspace/cache/
 workspace/downloads/
 workspace/output/
+workspace/training_datasets/
+workspace/tools/
 workspace/work/
+workspace/*.pid
 workspace/*.log
+workspace/.mww-data-dir
 workspace/**/*.json
 workspace/**/*.yaml
 workspace/**/*.yml
