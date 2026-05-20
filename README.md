@@ -138,6 +138,8 @@ models/hey-komi-candidate/hey_komi.tflite
 models/hey-komi-candidate/model-card.md
 ```
 
+Download the tagged prerelease assets from [Hey Komi v0.1.0 candidate](https://github.com/seukseok/micro-wake-word-gpu-starter/releases/tag/v0.1.0-candidate).
+
 Candidate training summary:
 
 ```text
