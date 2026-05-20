@@ -21,6 +21,7 @@ workspace/tools/
 workspace/work/
 workspace/*.pid
 workspace/*.log
+workspace/*.py
 workspace/.mww-data-dir
 workspace/**/*.json
 workspace/**/*.yaml

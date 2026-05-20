@@ -14,6 +14,8 @@ This starter is for Home Assistant and ESPHome users who want to build a local w
 
 This is a GPU training starter kit for ESPHome micro wake word models. It is not a new model architecture and it does not replace the upstream trainer. The value is the glue around the trainer: a reproducible Docker launch, GPU checks, dataset notes, smoke-training scripts, manifest validation, ESPHome export, and a real UI/video demo so people can tell what they are getting before they clone it.
 
+For the product-quality roadmap and public model release gates, see [docs/product-roadmap.md](docs/product-roadmap.md).
+
 ## Why this exists
 
 The useful pieces are already out there:
@@ -126,6 +128,32 @@ The run used real public data for the path check: `kahrendt/microwakeword` negat
 
 See [examples/hey-komi-gpu-smoke-training.md](examples/hey-komi-gpu-smoke-training.md) for the exact results and limitations.
 
+## Candidate Model
+
+This repo now includes a real trained `Hey Komi` candidate model:
+
+```text
+models/hey-komi-candidate/hey_komi.json
+models/hey-komi-candidate/hey_komi.tflite
+models/hey-komi-candidate/model-card.md
+```
+
+Candidate training summary:
+
+```text
+Samples: 5,000 generated wake-word clips
+Training steps: 5,000
+Trainer result: Training complete (GPU path)
+CPU fallback: false
+Elapsed time: 0:21:31
+Calibration: cutoff=0.34, window=3, recall=97.70%, ambient_faph=0.724
+TFLite streaming test: cutoff=0.89 -> frr=0.0520, faph=0.000
+```
+
+This is a tester candidate, not a stable public wake word. It still needs ESP32-S3 microphone validation and real false-wake/miss reports.
+
+See [models/hey-komi-candidate/model-card.md](models/hey-komi-candidate/model-card.md).
+
 ## Public Datasets
 
 The dataset catalog is in [datasets/catalog.json](datasets/catalog.json), with notes in [datasets/README.md](datasets/README.md).
@@ -179,6 +207,7 @@ docs/assets/
   trainer-ui-trainer.png
 models/
   example_wake_word.json
+  hey-komi-candidate/
 scripts/
   check_trainer_gpu.ps1
   export_esphome.py
@@ -239,7 +268,7 @@ Examples to try:
 
 ## What is intentionally not here
 
-- No bundled model weights.
+- No stable bundled model weights; the included `Hey Komi` model is a candidate for testers.
 - No claim that the included smoke-training result is production-ready.
 - No promise that any model is production-ready before hardware testing.
 - No forked copy of upstream training code.
