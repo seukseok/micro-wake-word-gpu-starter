@@ -41,3 +41,7 @@ On Windows with an NVIDIA GPU, run the end-to-end smoke test:
 ```
 
 Keep scripts dependency-free unless a dependency removes a lot of real complexity.
+
+## README translations
+
+Keep [README.md](README.md) and [README.en.md](README.en.md) in sync. If a change affects user-facing README content, update both the Korean and English versions in the same commit.
