@@ -55,6 +55,14 @@ Create the folders:
 python scripts/stage_dataset_dirs.py
 ```
 
+Check the upstream trainer dataset folders:
+
+```powershell
+.\scripts\prepare_training_datasets.ps1
+```
+
+This reports file counts and approximate size for `workspace/training_datasets/negative_datasets`, MIT RIR, AudioSet, FMA, WHAM, and CHiME folders.
+
 Run:
 
 ```bash

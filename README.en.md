@@ -53,6 +53,7 @@ Check the GPU training environment:
 
 ```powershell
 .\scripts\check_trainer_gpu.ps1
+.\scripts\doctor.ps1
 ```
 
 ## Candidate Model
@@ -107,13 +108,18 @@ Inspect the catalog:
 python scripts/show_datasets.py --recommended first
 ```
 
+Check large trainer dataset readiness:
+
+```powershell
+.\scripts\prepare_training_datasets.ps1
+```
+
 ## Future Plan
 
-- `doctor.ps1`: check Docker, NVIDIA, trainer UI, TensorFlow GPU, and dataset folders in one command
-- Resumable dataset prep: make large dataset download/extract/convert jobs restartable
 - ESP32-S3 test reports: collect board, microphone, room, threshold, false wake, and missed wake data
-- Model quality gates: define clear smoke/candidate/hardware-validated release criteria
-- Release demo assets: add captures of the artifact folder, manifest validation, and ESPHome export
+- Hardware-validated model release: collect at least one real microphone test report
+- Improved resumable dataset prep: make large download/extract/convert jobs restartable
+- More release demo assets: add real hardware test video or a short demo MP4
 
 The full roadmap is in [docs/product-roadmap.md](docs/product-roadmap.md).
 
@@ -121,6 +127,8 @@ The full roadmap is in [docs/product-roadmap.md](docs/product-roadmap.md).
 
 - [Windows/WSL2/RTX guide](docs/windows-wsl2-rtx.md)
 - [Dataset guide](docs/dataset-guide.md)
+- [Model quality gates](docs/model-quality-gates.md)
+- [Release demo assets](docs/release-demo-assets.md)
 - [Release playbook](docs/release-playbook.md)
 - [Hey Komi model card](models/hey-komi-candidate/model-card.md)
 - [RTX 5070 Ti smoke test](examples/rtx-5070-ti-smoke-test.md)

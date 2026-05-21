@@ -9,6 +9,8 @@ Working today:
 - Docker Compose starts the upstream NVIDIA trainer UI.
 - RTX 5070 Ti GPU passthrough is verified.
 - Torch and TensorFlow GPU checks are scripted.
+- `scripts/doctor.ps1` checks Docker, GPU, trainer UI, trainer venv, TensorFlow, Torch, and dataset folders.
+- `scripts/prepare_training_datasets.ps1` summarizes local large-dataset readiness.
 - The repo has a real trainer UI video/GIF, not a mocked demo.
 - A small end-to-end `hey komi` GPU smoke training run completed and produced `.tflite` plus `.json` artifacts.
 - A larger `Hey Komi` candidate model is published with a model card under `models/hey-komi-candidate/`.
@@ -33,7 +35,7 @@ Target:
 .\scripts\doctor.ps1
 ```
 
-The command should print clear pass/fail rows and suggested fixes.
+Status: implemented for the MVP. Keep improving fix hints as tester reports arrive.
 
 ### 2. Resumable dataset preparation
 
@@ -54,7 +56,7 @@ workspace/training_datasets/chime_16k/
 
 A public model should not be called stable just because training finished. It should pass documented gates.
 
-Suggested release gates:
+Release gates are documented in [model-quality-gates.md](model-quality-gates.md). Minimum signals:
 
 - training run completes on GPU without fallback
 - manifest validates
@@ -85,6 +87,8 @@ Keep the current UI video, but add release-result assets:
 - screenshot of `validate_manifest.py`
 - screenshot or terminal capture of ESPHome YAML export
 - optional short MP4 showing the trainer UI plus final artifact folder
+
+The release-result command snippets are documented in [release-demo-assets.md](release-demo-assets.md).
 
 ### 6. Hardware feedback loop
 

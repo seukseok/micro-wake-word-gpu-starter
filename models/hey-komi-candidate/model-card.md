@@ -6,6 +6,8 @@ This folder contains a trained ESPHome micro wake word candidate for the phrase 
 
 It is a real trained model, but it should not be described as production-stable until it is tested on ESP32-S3 microphone hardware in normal rooms.
 
+Quality gates are documented in [../../docs/model-quality-gates.md](../../docs/model-quality-gates.md).
+
 ## Files
 
 ```text

@@ -53,6 +53,7 @@ GPU 학습 환경 점검:
 
 ```powershell
 .\scripts\check_trainer_gpu.ps1
+.\scripts\doctor.ps1
 ```
 
 ## 후보 모델
@@ -107,13 +108,18 @@ TFLite streaming test: cutoff=0.89 -> frr=0.0520, faph=0.000
 python scripts/show_datasets.py --recommended first
 ```
 
+트레이너용 대용량 데이터셋 준비 상태 확인:
+
+```powershell
+.\scripts\prepare_training_datasets.ps1
+```
+
 ## 앞으로 할 계획
 
-- `doctor.ps1`: Docker, NVIDIA, trainer UI, TensorFlow GPU, 데이터셋 폴더를 한 번에 점검
-- Resumable dataset prep: 대용량 데이터셋 다운로드/압축해제/변환을 이어받기 가능하게 개선
 - ESP32-S3 테스트 리포트: board, microphone, room, threshold, false wake, missed wake 수집
-- Model quality gates: smoke/candidate/hardware-validated 릴리스 기준 명확화
-- Release demo assets: 학습 결과 폴더, manifest 검증, ESPHome export 화면 캡처 추가
+- Hardware-validated 모델 릴리스: 최소 1개 이상의 실제 마이크 테스트 보고서 확보
+- Resumable dataset prep 고도화: 대용량 다운로드/압축해제/변환 자동 재개
+- 추가 release demo assets: 실제 하드웨어 테스트 영상 또는 짧은 시연 MP4 추가
 
 전체 로드맵은 [docs/product-roadmap.md](docs/product-roadmap.md)에 있습니다.
 
@@ -121,6 +127,8 @@ python scripts/show_datasets.py --recommended first
 
 - [Windows/WSL2/RTX guide](docs/windows-wsl2-rtx.md)
 - [Dataset guide](docs/dataset-guide.md)
+- [Model quality gates](docs/model-quality-gates.md)
+- [Release demo assets](docs/release-demo-assets.md)
 - [Release playbook](docs/release-playbook.md)
 - [Hey Komi model card](models/hey-komi-candidate/model-card.md)
 - [RTX 5070 Ti smoke test](examples/rtx-5070-ti-smoke-test.md)

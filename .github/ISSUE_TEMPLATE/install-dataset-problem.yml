@@ -1,0 +1,54 @@
+name: Install or dataset problem
+description: Report setup, Docker, GPU, trainer, or dataset preparation problems.
+title: "[setup]: "
+labels: ["setup", "dataset"]
+body:
+  - type: dropdown
+    id: problem_area
+    attributes:
+      label: Problem area
+      options:
+        - Docker or trainer startup
+        - NVIDIA GPU passthrough
+        - TensorFlow or Torch GPU detection
+        - Dataset download or conversion
+        - Manifest validation or ESPHome export
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: Windows 11 + Docker Desktop, Ubuntu 24.04, etc.
+    validations:
+      required: true
+  - type: input
+    id: gpu
+    attributes:
+      label: GPU
+      placeholder: RTX 5070 Ti, RTX 4090, none
+    validations:
+      required: false
+  - type: textarea
+    id: command
+    attributes:
+      label: Command that failed
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Output or error
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: doctor_output
+    attributes:
+      label: doctor output
+      description: Paste `.\scripts\doctor.ps1` output if available.
+      render: text
+    validations:
+      required: false

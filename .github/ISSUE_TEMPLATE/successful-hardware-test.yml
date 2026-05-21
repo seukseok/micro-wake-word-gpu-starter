@@ -1,0 +1,69 @@
+name: Successful hardware test
+description: Share a working ESPHome device result.
+title: "[hardware-success]: "
+labels: ["hardware-test", "success"]
+body:
+  - type: input
+    id: model_version
+    attributes:
+      label: Model version
+      placeholder: Hey Komi v0.1.0 candidate
+    validations:
+      required: true
+  - type: input
+    id: board
+    attributes:
+      label: Board
+      placeholder: ESP32-S3-BOX-3, M5Stack Atom Echo, XIAO ESP32S3
+    validations:
+      required: true
+  - type: input
+    id: microphone
+    attributes:
+      label: Microphone
+      placeholder: Built-in mic, INMP441, ReSpeaker, other
+    validations:
+      required: true
+  - type: input
+    id: room
+    attributes:
+      label: Room
+      placeholder: Quiet office, living room, kitchen
+    validations:
+      required: true
+  - type: input
+    id: attempts
+    attributes:
+      label: Wake attempts
+      placeholder: 20
+    validations:
+      required: true
+  - type: input
+    id: missed_wakes
+    attributes:
+      label: Missed wakes
+      placeholder: 0
+    validations:
+      required: true
+  - type: input
+    id: false_wakes_per_hour
+    attributes:
+      label: False wakes per hour
+      placeholder: 0
+    validations:
+      required: true
+  - type: textarea
+    id: manifest_settings
+    attributes:
+      label: Manifest settings
+      description: Paste probability_cutoff, sliding_window_size, tensor_arena_size, and ESPHome version.
+      render: yaml
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      placeholder: Distance, speaker volume, room noise, useful ESPHome config details.
+    validations:
+      required: false

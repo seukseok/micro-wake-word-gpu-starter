@@ -59,6 +59,13 @@ class ExportTests(unittest.TestCase):
         )
         self.assertIn("github://owner/repo/models/hey_komi.json", snippet)
 
+    def test_candidate_manifest_and_export_are_valid(self):
+        manifest = ROOT / "models" / "hey-komi-candidate" / "hey_komi.json"
+        self.assertEqual(validate_manifest(manifest), [])
+        snippet = build_snippet(manifest, None)
+        self.assertIn("/config/esphome/models/hey_komi.json", snippet)
+        self.assertIn("id: hey_komi_wake_word", snippet)
+
 
 class DatasetTests(unittest.TestCase):
     def test_manifest_folder_paths_use_forward_slashes(self):
@@ -82,6 +89,64 @@ class DatasetTests(unittest.TestCase):
         self.assertIn("positive", suffixes)
         self.assertIn("negative/speech_commands", suffixes)
         self.assertIn("negative/fsd50k", suffixes)
+
+
+class MvpReadinessTests(unittest.TestCase):
+    def test_mvp_scripts_are_present(self):
+        doctor = ROOT / "scripts" / "doctor.ps1"
+        datasets = ROOT / "scripts" / "prepare_training_datasets.ps1"
+        self.assertTrue(doctor.exists())
+        self.assertTrue(datasets.exists())
+        self.assertIn("tensorflow gpu", doctor.read_text(encoding="utf-8"))
+        self.assertIn("negative_datasets", datasets.read_text(encoding="utf-8"))
+
+    def test_model_quality_docs_are_linked(self):
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        readme_en = (ROOT / "README.en.md").read_text(encoding="utf-8")
+        roadmap = (ROOT / "docs" / "product-roadmap.md").read_text(encoding="utf-8")
+        self.assertIn("docs/model-quality-gates.md", readme)
+        self.assertIn("docs/model-quality-gates.md", readme_en)
+        self.assertIn("model-quality-gates.md", roadmap)
+
+    def test_issue_templates_collect_required_hardware_fields(self):
+        templates = {
+            "false-wake-report.yml": [
+                "model_version",
+                "board",
+                "microphone",
+                "false_wakes_per_hour",
+                "manifest_settings",
+            ],
+            "missed-wake-report.yml": [
+                "model_version",
+                "board",
+                "microphone",
+                "attempts",
+                "missed_wakes",
+                "manifest_settings",
+            ],
+            "successful-hardware-test.yml": [
+                "model_version",
+                "board",
+                "microphone",
+                "attempts",
+                "false_wakes_per_hour",
+                "missed_wakes",
+            ],
+            "install-dataset-problem.yml": [
+                "problem_area",
+                "os",
+                "command",
+                "output",
+                "doctor_output",
+            ],
+        }
+
+        template_dir = ROOT / ".github" / "ISSUE_TEMPLATE"
+        for filename, fields in templates.items():
+            text = (template_dir / filename).read_text(encoding="utf-8")
+            for field in fields:
+                self.assertIn(f"id: {field}", text)
 
 
 if __name__ == "__main__":

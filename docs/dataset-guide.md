@@ -10,6 +10,14 @@ Inspect the recommended first-run dataset stack:
 python scripts/show_datasets.py --recommended first
 ```
 
+Check the local trainer dataset folders:
+
+```powershell
+.\scripts\prepare_training_datasets.ps1
+```
+
+The status script does not download large archives by itself. It shows which `workspace/training_datasets/` folders are ready, partial, or missing so you can resume preparation without guessing.
+
 ## Positive samples
 
 Positive samples contain the wake phrase.

@@ -1,0 +1,62 @@
+name: False wake report
+description: Report a wake word trigger that happened when nobody said the phrase.
+title: "[false-wake]: "
+labels: ["hardware-test", "false-wake"]
+body:
+  - type: input
+    id: model_version
+    attributes:
+      label: Model version
+      placeholder: Hey Komi v0.1.0 candidate
+    validations:
+      required: true
+  - type: input
+    id: board
+    attributes:
+      label: Board
+      placeholder: ESP32-S3-BOX-3, M5Stack Atom Echo, XIAO ESP32S3
+    validations:
+      required: true
+  - type: input
+    id: microphone
+    attributes:
+      label: Microphone
+      placeholder: Built-in mic, INMP441, ReSpeaker, other
+    validations:
+      required: true
+  - type: input
+    id: room
+    attributes:
+      label: Room and noise source
+      placeholder: Living room, TV on, 2m from speaker
+    validations:
+      required: true
+  - type: input
+    id: listening_time
+    attributes:
+      label: Listening time
+      placeholder: 2 hours
+    validations:
+      required: true
+  - type: input
+    id: false_wakes_per_hour
+    attributes:
+      label: False wakes per hour
+      placeholder: 0.5
+    validations:
+      required: true
+  - type: textarea
+    id: manifest_settings
+    attributes:
+      label: Manifest settings
+      description: Paste probability_cutoff, sliding_window_size, tensor_arena_size, and ESPHome version.
+      render: yaml
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: What was happening?
+      placeholder: TV dialog, music, kitchen noise, similar word, etc.
+    validations:
+      required: false
