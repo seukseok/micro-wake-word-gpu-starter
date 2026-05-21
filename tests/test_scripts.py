@@ -108,6 +108,22 @@ class MvpReadinessTests(unittest.TestCase):
         self.assertIn("docs/model-quality-gates.md", readme_en)
         self.assertIn("model-quality-gates.md", roadmap)
 
+    def test_setup_usage_guide_is_linked(self):
+        guide = ROOT / "docs" / "setup-and-usage.md"
+        guide_ko = ROOT / "docs" / "setup-and-usage.ko.md"
+        self.assertTrue(guide.exists())
+        self.assertTrue(guide_ko.exists())
+        guide_text = guide.read_text(encoding="utf-8")
+        guide_ko_text = guide_ko.read_text(encoding="utf-8")
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        readme_en = (ROOT / "README.en.md").read_text(encoding="utf-8")
+        self.assertIn("docs/setup-and-usage.ko.md", readme)
+        self.assertIn("docs/setup-and-usage.md", readme_en)
+        self.assertIn("docker compose up -d", guide_text)
+        self.assertIn("doctor.ps1", guide_text)
+        self.assertIn("docker compose up -d", guide_ko_text)
+        self.assertIn("doctor.ps1", guide_ko_text)
+
     def test_issue_templates_collect_required_hardware_fields(self):
         templates = {
             "false-wake-report.yml": [

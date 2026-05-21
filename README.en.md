@@ -8,31 +8,44 @@ Train and package custom ESPHome micro wake word models with an NVIDIA GPU.
 
 This is a real capture from the running trainer UI. Open the [raw MP4 demo](https://raw.githubusercontent.com/seukseok/micro-wake-word-gpu-starter/main/docs/assets/trainer-ui-demo.mp4) if you want the video version.
 
-## What Can It Do?
+## Choose Your Path
 
-- Run the NVIDIA GPU-backed microWakeWord trainer UI with Docker Compose.
-- Validate generated `.tflite` models and ESPHome `.json` manifests.
-- Help with public dataset staging, GPU checks, and ESPHome YAML export scripts.
-- Provide a real RTX 5070 Ti-trained `Hey Komi` candidate model with a model card.
+| Goal | Start Here |
+| --- | --- |
+| Try the candidate model only | Download `hey_komi.tflite` and `hey_komi.json` from the [v0.2.0 MVP release](https://github.com/seukseok/micro-wake-word-gpu-starter/releases/tag/v0.2.0-mvp), then place them in your ESPHome model folder. |
+| Run the GPU trainer | Start Docker Desktop, run `docker compose up -d`, then open `http://localhost:8789`. |
+| Train your own wake word | Run `doctor.ps1`, check dataset readiness, run smoke training, validate the manifest, then export ESPHome YAML. |
+
+See the [Setup and usage guide](docs/setup-and-usage.md) for the full walkthrough.
 
 ## Quick Start
 
-Requirements:
+Windows PowerShell:
 
-- Windows 11 or Linux
-- NVIDIA GPU with current drivers
-- Docker Desktop with WSL2 integration, or Docker Engine on Linux
-
-Start the trainer:
-
-```bash
-docker compose up
+```powershell
+git clone https://github.com/seukseok/micro-wake-word-gpu-starter.git
+cd micro-wake-word-gpu-starter
+docker compose up -d
+.\scripts\doctor.ps1
 ```
 
-Open:
+Open the trainer UI:
 
 ```text
 http://localhost:8789
+```
+
+Check large trainer dataset readiness:
+
+```powershell
+.\scripts\prepare_training_datasets.ps1
+```
+
+Validate a generated model and print an ESPHome snippet:
+
+```powershell
+python scripts\validate_manifest.py workspace\trained_wake_words\hey_komi.json
+python scripts\export_esphome.py workspace\trained_wake_words\hey_komi.json
 ```
 
 Training outputs are created here by default:
@@ -42,23 +55,9 @@ workspace/trained_wake_words/<wake_word>.tflite
 workspace/trained_wake_words/<wake_word>.json
 ```
 
-Validate a manifest and generate an ESPHome snippet:
+## Use The Candidate Model
 
-```bash
-python scripts/validate_manifest.py workspace/trained_wake_words/hey_komi.json
-python scripts/export_esphome.py workspace/trained_wake_words/hey_komi.json
-```
-
-Check the GPU training environment:
-
-```powershell
-.\scripts\check_trainer_gpu.ps1
-.\scripts\doctor.ps1
-```
-
-## Candidate Model
-
-The `Hey Komi` candidate model was trained on a real RTX 5070 Ti GPU.
+Files you can try now:
 
 ```text
 models/hey-komi-candidate/hey_komi.tflite
@@ -66,19 +65,35 @@ models/hey-komi-candidate/hey_komi.json
 models/hey-komi-candidate/model-card.md
 ```
 
-Download: [Hey Komi v0.1.0 candidate](https://github.com/seukseok/micro-wake-word-gpu-starter/releases/tag/v0.1.0-candidate)
+Download from releases:
 
-```text
-Samples: 5,000 generated wake-word clips
-Training steps: 5,000
-Trainer result: Training complete (GPU path)
-CPU fallback: false
-Elapsed time: 0:21:31
-Calibration: cutoff=0.34, window=3, recall=97.70%, ambient_faph=0.724
-TFLite streaming test: cutoff=0.89 -> frr=0.0520, faph=0.000
+- [micro-wake-word-gpu-starter v0.2.0 MVP](https://github.com/seukseok/micro-wake-word-gpu-starter/releases/tag/v0.2.0-mvp)
+- [Hey Komi v0.1.0 candidate](https://github.com/seukseok/micro-wake-word-gpu-starter/releases/tag/v0.1.0-candidate)
+
+Place the `.tflite` and `.json` files in the same ESPHome model folder, then use the path printed by the export script.
+
+```yaml
+micro_wake_word:
+  models:
+    - model: /config/esphome/models/hey_komi.json
+      id: hey_komi_wake_word
 ```
 
-This is not a `hardware-validated` model yet. Stable release needs ESP32-S3 microphone testing for false wakes and missed wakes.
+This is not a `hardware-validated` model yet. Treat it as a candidate until false wake and missed wake tests are completed on real ESP32-S3 microphone hardware.
+
+## Train Your Own Model
+
+1. Start the trainer with `docker compose up -d`.
+2. Run `.\scripts\doctor.ps1` to check Docker, GPU, Torch, TensorFlow, UI, and dataset status.
+3. Open `http://localhost:8789` and enter your wake phrase plus training settings.
+4. Validate the generated `.tflite` and `.json` files.
+5. Paste the `python scripts\export_esphome.py ...` output into your ESPHome config.
+
+Short end-to-end training check:
+
+```powershell
+.\scripts\train_smoke.ps1 -WakeWord "hey komi" -WakeWordTitle "Hey Komi" -Samples 50 -BatchSize 10 -TrainingSteps 20
+```
 
 ## Verified Environment
 
@@ -89,11 +104,14 @@ This is not a `hardware-validated` model yet. Stable release needs ESP32-S3 micr
 - TensorFlow sees `/physical_device:GPU:0`
 - GitHub Actions CI passes
 
-The small end-to-end GPU smoke run is documented in [examples/hey-komi-gpu-smoke-training.md](examples/hey-komi-gpu-smoke-training.md).
-
 ## Datasets
 
-The dataset catalog is in [datasets/catalog.json](datasets/catalog.json). See [datasets/README.md](datasets/README.md) and [docs/dataset-guide.md](docs/dataset-guide.md) for details.
+The dataset catalog is in [datasets/catalog.json](datasets/catalog.json).
+
+```powershell
+python scripts\show_datasets.py --recommended first
+.\scripts\prepare_training_datasets.ps1
+```
 
 Representative sources:
 
@@ -102,36 +120,22 @@ Representative sources:
 - MLCommons Multilingual Spoken Words microset: multilingual spoken-word clips
 - FSD50K: environmental hard negatives
 
-Inspect the catalog:
-
-```bash
-python scripts/show_datasets.py --recommended first
-```
-
-Check large trainer dataset readiness:
-
-```powershell
-.\scripts\prepare_training_datasets.ps1
-```
-
 ## Future Plan
 
-- ESP32-S3 test reports: collect board, microphone, room, threshold, false wake, and missed wake data
-- Hardware-validated model release: collect at least one real microphone test report
-- Improved resumable dataset prep: make large download/extract/convert jobs restartable
-- More release demo assets: add real hardware test video or a short demo MP4
-
-The full roadmap is in [docs/product-roadmap.md](docs/product-roadmap.md).
+- Collect ESP32-S3 test reports
+- Release a hardware-validated model
+- Improve resumable large dataset download/extract/convert flows
+- Add real hardware test video or a short demo MP4
 
 ## Related Docs
 
+- [Setup and usage guide](docs/setup-and-usage.md)
 - [Windows/WSL2/RTX guide](docs/windows-wsl2-rtx.md)
 - [Dataset guide](docs/dataset-guide.md)
 - [Model quality gates](docs/model-quality-gates.md)
 - [Release demo assets](docs/release-demo-assets.md)
 - [Release playbook](docs/release-playbook.md)
 - [Hey Komi model card](models/hey-komi-candidate/model-card.md)
-- [RTX 5070 Ti smoke test](examples/rtx-5070-ti-smoke-test.md)
 
 ## License
 

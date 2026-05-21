@@ -133,7 +133,7 @@ if ($containerRunning) {
     $torchCode = "import torch; print('cuda_available=true' if torch.cuda.is_available() else 'cuda_available=false'); print(torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'none')"
     $torch = Invoke-Native "docker" @("exec", "-e", "LD_LIBRARY_PATH=$ldLibraryPath", $ContainerName, $python, "-c", $torchCode)
     if ($torch.ExitCode -eq 0 -and $torch.Output -match "cuda_available=true") {
-        $device = ($torch.Output.Split("`n") | Select-Object -Last 1).Trim()
+        $device = ($torch.Output.Split("`n") | Where-Object { $_ -and $_ -notmatch "cuda_available=" } | Select-Object -Last 1).Trim()
         Add-Check "torch cuda" "PASS" $device
     } else {
         Add-Check "torch cuda" "FAIL" "torch does not report CUDA available" "Run scripts/check_trainer_gpu.ps1 and confirm NVIDIA libraries are visible in the trainer venv."
@@ -142,7 +142,10 @@ if ($containerRunning) {
     $tfCode = "import tensorflow as tf; gpus=tf.config.list_physical_devices('GPU'); print(f'gpu_count={len(gpus)}'); print(gpus[0].name if gpus else 'none')"
     $tf = Invoke-Native "docker" @("exec", "-e", "LD_LIBRARY_PATH=$ldLibraryPath", $ContainerName, $python, "-c", $tfCode)
     if ($tf.ExitCode -eq 0 -and $tf.Output -match "gpu_count=1") {
-        $device = ($tf.Output.Split("`n") | Select-Object -Last 1).Trim()
+        $device = ($tf.Output.Split("`n") | Where-Object { $_ -match "/physical_device:GPU" } | Select-Object -Last 1).Trim()
+        if (-not $device) {
+            $device = "GPU detected"
+        }
         Add-Check "tensorflow gpu" "PASS" $device
     } else {
         Add-Check "tensorflow gpu" "FAIL" "TensorFlow does not report a GPU" "Run scripts/check_trainer_gpu.ps1; keep CPU fallback disabled for release training."
